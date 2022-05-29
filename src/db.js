@@ -5,7 +5,7 @@ function connect(){
 
 
     mongoose.connection.once("open", ()=>{
-        console.log("Conected with mongo")
+        console.log("Connected with mongo")
     });
 
     mongoose.connection.on("error", (err)=>{
