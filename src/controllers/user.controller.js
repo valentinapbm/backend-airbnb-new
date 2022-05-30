@@ -1,4 +1,3 @@
-const { create } = require("../models/user.model");
 const User = require("../models/user.model");
 
 module.exports = {
@@ -10,7 +9,7 @@ module.exports = {
             res.status(200).json({ message: "Users found", data: users });
         })
         .catch((err) => {
-            res.status(404).json({ message: "User not found" });
+            res.status(404).json({ message: "Users not found" });
         });
     },
     //show ID
@@ -18,6 +17,8 @@ module.exports = {
         const { userId } = req.params;
     
         User.findById(userId)
+        .select("-password")
+        .populate("bookingsites", "title description")
         .then((user) => {
             res.status(200).json({ message: "User found", data: user });
         })
@@ -49,7 +50,7 @@ module.exports = {
     update(req, res){
         const { userId } = req.params;
 
-    User.findByIdAndUpdate(userId, req.body, { new: true })
+    User.findByIdAndUpdate(userId, req.body, { new: true, runValidators: true, context: 'query' })
     .then((user) => {
         res.status(200).json({ message: "User updated", data: user });
     })
