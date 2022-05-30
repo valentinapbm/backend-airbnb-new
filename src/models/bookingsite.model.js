@@ -85,7 +85,12 @@ const BookingSiteSchema = new Schema(
         },
         images:{
             type:String
-        }
+        },
+        user:{
+            type: Schema.Types.ObjectId, //Usuario con id único
+            ref: "User",
+            required: true,
+        },
         
     }, { timestamps: true }
 );

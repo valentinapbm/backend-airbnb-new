@@ -8,12 +8,12 @@ const passRegex = new RegExp("(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^
 const commentRegex = new RegExp("[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$");
 const userSchema = new Schema(
     {
-        rol:{
+        role:{
             type:String,
             required:true,
             enum:{
                 values:["host","guest","admin"],
-                message: "invalid rol",
+                message: "invalid role",
             }
         },
         name:{
@@ -76,6 +76,10 @@ const userSchema = new Schema(
         },
         image:{
             type:String
+        },
+        bookingsites:{
+            type: [{type: Schema.Types.ObjectId, ref: "BookingSite" }],
+            required: false,
         }
         
     }, { timestamps: true }

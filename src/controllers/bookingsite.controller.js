@@ -1,4 +1,5 @@
 const BookingSite = require("../models/bookingsite.model");
+const User = require("../models/user.model");
 
 module.exports = {
 
@@ -9,7 +10,7 @@ module.exports = {
             res.status(200).json({ message: "Booking Sites found", data: bookingSites });
         })
         .catch((err) => {
-            res.status(404).json({ message: "Booking Site not found" });
+            res.status(404).json({ message: "Booking Sites not found" });
         });
     },
     //show ID
@@ -17,6 +18,10 @@ module.exports = {
         const { bookingSiteId } = req.params;
     
         BookingSite.findById(bookingSiteId)
+        .populate({
+            path: "user",
+            select : "name lastname",
+        })
         .then((bookingSite) => {
             res.status(200).json({ message: "Booking Site found", data: bookingSite });
         })
@@ -28,16 +33,17 @@ module.exports = {
 
     //Create -POST
     create(req,res){
-        const data =req.body;
-        const newBookingSite = {
-            ...data,
-            
-        };
+        const {userId}=req.params;
 
-        BookingSite.create(newBookingSite)
+        BookingSite.create({ ...req.body, user: userId })
         .then((bookingSite) => {
-            res.status(201).json({ message: "Booking Site created", data: bookingSite });
-        })
+            User.findById(userId).then((user) => {
+                user.bookingsites.push(bookingSite),
+                user.save({ validateBeforeSave: false }).then(() => {
+                    res.status(201).json({ message: "Booking Site created", data: bookingSite });
+                });
+            });
+            })
         .catch((err) => {
             res
             .status(400)
@@ -48,7 +54,7 @@ module.exports = {
     update(req, res){
         const { bookingSiteId } = req.params;
 
-    BookingSite.findByIdAndUpdate(bookingSiteId, req.body, { new: true })
+    BookingSite.findByIdAndUpdate(bookingSiteId, req.body, { new: true, runValidators: true, context: 'query' })
     .then((bookingSite) => {
         res.status(200).json({ message: "Booking Site updated", data: bookingSite });
     })
