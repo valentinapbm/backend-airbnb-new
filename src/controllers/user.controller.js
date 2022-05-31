@@ -14,11 +14,11 @@ module.exports = {
   //show ID
   show(req, res) {
     const { userId } = req.params;
-
     User.findById(userId)
       .select("-password")
       .populate("bookings", "date")
       .populate("reviews", "title message")
+      .populate("bookingsites", "title description")
       .then((user) => {
         res.status(200).json({ message: "User found", data: user });
       })
@@ -26,6 +26,7 @@ module.exports = {
         res.status(404).json({ message: "User not found", data: err });
       });
   },
+
 
   //Create -POST
   create(req, res) {
@@ -46,9 +47,8 @@ module.exports = {
   //Update PUT
   update(req, res) {
     const { userId } = req.params;
-
-    User.findByIdAndUpdate(userId, req.body, { new: true })
-      .then((user) => {
+    User.findByIdAndUpdate(userId, req.body, { new: true, runValidators: true, context: 'query' })
+    .then((user) => {
         res.status(200).json({ message: "User updated", data: user });
       })
       .catch((err) => {
