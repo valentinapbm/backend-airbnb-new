@@ -7,6 +7,4 @@ router.route("/").post(userController.create);
 router.route("/:userId").put(userController.update);
 router.route("/:userId").delete(userController.destroy);
 
-
-module.exports=router;
-
+module.exports = router;
