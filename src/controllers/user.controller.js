@@ -2,14 +2,13 @@ const User = require("../models/user.model");
 
 module.exports = {
   //GET -READ
-  list(req, res) {
-    User.find()
-      .then((users) => {
-        res.status(200).json({ message: "Users found", data: users });
-      })
-      .catch((err) => {
-        res.status(404).json({ message: "User not found" });
-      });
+  async list(req, res) {
+    try {
+      const users = await User.find();
+      res.status(200).json({ message: "Users found", data: users });
+    } catch (err) {
+      res.status(404).json({ message: "User not found" });
+    }
   },
   //show ID
   show(req, res) {
@@ -26,7 +25,6 @@ module.exports = {
         res.status(404).json({ message: "User not found", data: err });
       });
   },
-
 
   //Create -POST
   create(req, res) {
@@ -47,8 +45,12 @@ module.exports = {
   //Update PUT
   update(req, res) {
     const { userId } = req.params;
-    User.findByIdAndUpdate(userId, req.body, { new: true, runValidators: true, context: 'query' })
-    .then((user) => {
+    User.findByIdAndUpdate(userId, req.body, {
+      new: true,
+      runValidators: true,
+      context: "query",
+    })
+      .then((user) => {
         res.status(200).json({ message: "User updated", data: user });
       })
       .catch((err) => {
