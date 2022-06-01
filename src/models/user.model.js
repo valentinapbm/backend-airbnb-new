@@ -1,7 +1,7 @@
 const { Schema, model, models } = require("mongoose");
 
 const emailRegex = new RegExp(
-  "[a-z0-9._-]*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?[.])+[a-z0-9]{2,}"
+"[a-z0-9._-]*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?[.])+[a-z0-9]{2,}"
 );
 const nameRegex = new RegExp("(?:[a-zA-Z](?:[a-zA-Z]*[a-zA-Z]+$)+$)+$");
 const birthdayRegex= new RegExp("[0-9]{2}[\/]{1}[0-9]{2}[\/]{1}[0-9]{4}$");
@@ -84,14 +84,14 @@ const userSchema = new Schema(
             type: [{type: Schema.Types.ObjectId, ref: "BookingSite" }],
             required: false,
         },
-          bookings: {
+        bookings: {
         type: [{ type: Schema.Types.ObjectId, ref: "Booking" }],
         required: false,
-      },
-      reviews: {
+    },
+        reviews: {
         type: [{ type: Schema.Types.ObjectId, ref: "Review" }],
         required: false,
-      },
+    },
         
     }, { timestamps: true }
 
