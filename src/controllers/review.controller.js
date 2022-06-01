@@ -1,3 +1,4 @@
+const BookingSite = require("../models/bookingsite.model");
 const Review = require("../models/review.model");
 const User = require("../models/user.model");
 
@@ -16,10 +17,12 @@ module.exports = {
   show(req, res) {
     const { reviewId } = req.params;
     Review.findById(reviewId)
-      .populate({
-        path: "user",
-        Select: "name",
-      })
+      // .populate({
+      //   path: "user",
+      //   Select: "name",
+      // })
+      .populate("userId", "name lastname email")
+      .populate("bookingSiteId")
       .then((review) => {
         res.status(200).json(review);
       })
@@ -29,20 +32,35 @@ module.exports = {
   },
 
   //post
-  create(req, res) {
-    const { userId } = req.params;
+  async create(req, res) {
+    try {
+      // const { userId } = req.params;
+      const { userId, bookingSiteId } = req.body;
 
-    Review.create({ ...req.body, user: userId })
-      .then((review) => {
-        User.findById(userId).then((user) => {
-          user.reviews.push(review);
-          user.save({ validateBeforeSave: false }).then(() => {
-            res.status(201).json(review);
-          });
-        });
-      })
-      .catch((err) => res.status(400).json(err));
+      const user = await User.findById(userId);
+      if (!user) {
+        throw new Error("Invalid user");
+      }
+
+      const bookingSite = await BookingSite.findById(bookingSiteId);
+      if (!bookingSite) {
+        throw new Error("Invalid bookingsite");
+      }
+
+      const review = await Review.create({ ...req.body });
+
+      user.reviews.push(review);
+      bookingSite.reviews.push(review);
+
+      await user.save({ validateBeforeSave: false });
+      await bookingSite.save({ validateBeforeSave: false });
+
+      res.status(201).json(review);
+    } catch (err) {
+      res.status(400).json(err);
+    }
   },
+
   //update
   update(req, res) {
     const { reviewId } = req.params;
