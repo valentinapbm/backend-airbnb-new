@@ -46,31 +46,23 @@ module.exports = {
     }
     },
     //Update PUT
-    update(req, res){
-        const { bookingSiteId } = req.params;
-
-    BookingSite.findByIdAndUpdate(bookingSiteId, req.body, { new: true, runValidators: true, context: 'query' })
-    .then((bookingSite) => {
-        res.status(200).json({ message: "Booking Site updated", data: bookingSite });
-    })
-    .catch((err) => {
-        res
-        .status(400)
-        .json({ message: "Booking Site could not be updated", data: err });
-    });
+    async update(req, res){
+        try{
+            const { bookingSiteId } = req.params;
+            const bookingSite= await BookingSite.findByIdAndUpdate(bookingSiteId, req.body, { new: true, runValidators: true, context: 'query' });
+            res.status(200).json({ message: "Booking Site updated", data: bookingSite });
+        }catch(err){
+            res.status(404).json(err);
+        }
     },
     //Delete
-    destroy(req, res) {
+    async destroy(req, res) {
+        try{
         const { bookingSiteId } = req.params;
-        
-        BookingSite.findByIdAndDelete(bookingSiteId)
-        .then((bookingSite) => {
-            res.status(200).json({ message: "Booking Site deleted", data: bookingSite });
-        })
-        .catch((err) => {
-            res
-            .status(400)
-            .json({ message: "Booking Site could not be deleted", data: err });
-        });
+        const bookingSite= await BookingSite.findByIdAndDelete(bookingSiteId);
+        res.status(200).json({ message: "Booking Site deleted", data: bookingSite });
+    }catch(err){
+        res.status(404).json(err);
+        };
     },
 }
