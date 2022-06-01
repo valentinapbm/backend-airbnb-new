@@ -4,51 +4,46 @@ const User = require("../models/user.model");
 module.exports = {
 
     //GET -READ
-    list(req, res){
-        BookingSite.find()
-        .then((bookingSites) => {
+    async list(req, res){
+        try{
+            const bookingSites = await BookingSite.find();
             res.status(200).json({ message: "Booking Sites found", data: bookingSites });
-        })
-        .catch((err) => {
-            res.status(404).json({ message: "Booking Sites not found" });
-        });
+        } catch (err){
+            res.status(500).json(err);
+        }
     },
     //show ID
-    show(req, res) {
-        const { bookingSiteId } = req.params;
-    
-        BookingSite.findById(bookingSiteId)
-        .populate({
-            path: "user",
-            select : "name lastname",
-        })
-        .then((bookingSite) => {
+    async show (req, res){
+        try{
+            const { bookingSiteId } = req.params;
+            
+            const bookingSite= await BookingSite.findById(bookingSiteId).populate({
+                path: "user",
+                select : "name lastname",
+            });
             res.status(200).json({ message: "Booking Site found", data: bookingSite });
-        })
-        .catch((err) => {
-            res.status(404).json({ message: "Booking Site not found" });
-        });
+        }catch (err){
+            res.status(404).json(err);
+        }
     },
 
-
     //Create -POST
-    create(req,res){
+    async create(req,res){
+        try{
         const {userId}=req.params;
+        const user = await User.findById(userId);
+        
+            if(!user){
+                throw new Error("Invalid user");
+            }
 
-        BookingSite.create({ ...req.body, user: userId })
-        .then((bookingSite) => {
-            User.findById(userId).then((user) => {
-                user.bookingsites.push(bookingSite),
-                user.save({ validateBeforeSave: false }).then(() => {
-                    res.status(201).json({ message: "Booking Site created", data: bookingSite });
-                });
-            });
-            })
-        .catch((err) => {
-            res
-            .status(400)
-            .json({ message: "Booking Site could not be created", data: err });
-        });
+        const bookingsite = await BookingSite.create({...req.body, user: user})
+        user.bookingsites.push(bookingsite);
+        await user.save({validateBeforeSave:false});
+        res.status(201).json({ message: "Booking Site created", data: bookingsite });
+    }catch (err) {
+        res.status(400).json(err);
+    }
     },
     //Update PUT
     update(req, res){
