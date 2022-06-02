@@ -2,20 +2,21 @@ const { Schema, model } = require("mongoose");
 
 const bookingSchema = new Schema(
   {
-    bookingSite: {
-      type: Schema.Types.ObjectId, // sitio con id unico
+    bookingSiteId: {
+      type: Schema.Types.ObjectId,
       ref: "BookingSite",
-      required: false,
+      required: true,
     },
-    user: {
+    userId: {
       type: Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
     date: {
-      type: [String],
+      type: String,
       required: true,
     },
+
   },
   {
     timestamps: true,
