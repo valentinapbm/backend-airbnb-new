@@ -134,6 +134,10 @@ const BookingSiteSchema = new Schema(
       type: [{ type: Schema.Types.ObjectId, ref: "Review" }],
       required: false,
     },
+        bookings: {
+        type: [{ type: Schema.Types.ObjectId, ref: "Booking" }],
+        required: false,
+    },
   },
   { timestamps: true }
 );

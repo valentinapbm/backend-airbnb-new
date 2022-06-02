@@ -28,7 +28,6 @@ module.exports = {
   //post
   async create(req, res) {
     try {
-      // const { userId } = req.params;
       const { userId, bookingSiteId } = req.body;
 
       const user = await User.findById(userId);
@@ -61,6 +60,7 @@ module.exports = {
       const { reviewId } = req.params;
       const review = await Review.findByIdAndUpdate(reviewId, req.body, {
         new: true,
+        runValidators: true, context: 'query'
       });
       res.status(200).json({ message: "review updated", data: review });
     } catch (err) {
@@ -73,7 +73,11 @@ module.exports = {
   async destroy(req, res) {
     try {
       const { reviewId } = req.params;
-      const review = await Review.findByIdAndDelete(reviewId);
+      const { userId, bookingSiteId } = req.body;
+
+      const review = await Review.findByIdAndDelete(reviewId,userId, bookingSiteId);
+
+
       res.status(200).json({ message: "review deleted", data: review });
     } catch (err) {
       res.status(400).json({ message: "review cant be deleted", data: err });

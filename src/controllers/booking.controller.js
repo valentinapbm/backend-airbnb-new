@@ -1,73 +1,81 @@
+const BookingSite = require("../models/bookingsite.model");
 const Booking = require("../models/booking.model");
 const User = require("../models/user.model");
 
 module.exports = {
   //get
-  list(req, res) {
-    Booking.find()
-      .then((booking) => {
-        res.status(200).json({ message: "bookings found", data: booking });
-      })
-      .catch((err) => {
-        res.status(404).json({ message: "bookings not found", data: err });
-      });
+  async list(req, res) {
+    try {
+      const booking = await Booking.find();
+      res.status(200).json({ message: "bookings found", data: booking });
+    } catch (err) {
+      res.status(404).json({ message: "bookings not found", data: err });
+    }
   },
-
   //get by id
-  show(req, res) {
-    const { bookingId } = req.params;
-
-    Booking.findById(bookingId)
-      .populate({
+  async show(req, res) {
+    try {
+      const { bookingId } = req.params;
+      const bookingById = await Booking.findById(bookingId).populate({
         path: "user",
         select: "name",
-      })
-      .then((booking) => {
-        res.status(200).json({ message: "booking found", data: booking });
-      })
-      .catch((err) => {
-        res.status(404).json(err);
       });
+      res.status(200).json({ message: "booking found", data: bookingById });
+    } catch (err) {
+      res.status(404).json(err);
+    }
   },
-
   // post
-  create(req, res) {
-    const { userId } = req.params;
+  async create(req, res) {
+    try {
+        const { userId, bookingSiteId } = req.body;
+        
+        const user = await User.findById(userId);
+        if (!user) {
+          throw new Error("Invalid user");
+        }
 
-    Booking.create({ ...req.body, user: userId })
-      .then((booking) => {
-        User.findById(userId).then((user) => {
-          user.bookings.push(booking);
-          user.save({ validateBeforeSave: false }).then(() => {
-            res.status(201).json(booking);
-          });
-        });
-      })
-      .catch((err) => res.status(400).json(err));
+        const bookingSite = await BookingSite.findById(bookingSiteId);
+        if (!bookingSite) {
+          throw new Error("Invalid bookingsite");
+        }
+
+        const booking = await Booking.create({ ...req.body });
+
+        user.bookings.push(booking);
+        bookingSite.bookings.push(booking);
+
+        await user.save({ validateBeforeSave: false });
+        await bookingSite.save({ validateBeforeSave: false });
+
+        res.status(201).json(booking);
+    } catch (err) {
+      res.status(400).json(err);
+    }
   },
   //update
-  update(req, res) {
-    const { bookingId } = req.params;
-    Booking.findByIdAndUpdate(bookingId, req.body, { new: true })
-      .then((booking) => {
-        res.status(200).json({ message: "booking updated", data: booking });
-      })
-      .catch((err) => {
-        res
-          .status(400)
-          .json({ mmessage: "booking could not be updated", data: err });
+  async update(req, res) {
+    try {
+      const { bookingId } = req.params;
+      const booking = Booking.findByIdAndUpdate(bookingId, req.body, {
+        new: true,
+        runValidators: true, context: 'query'
       });
+      res.status(200).json({ message: "booking updated", data: booking });
+    } catch (err) {
+      res
+        .status(400)
+        .json({ mmessage: "booking could not be updated", data: err });
+    }
   },
   //delete
-  destroy(req, res) {
-    const { bookingId } = req.params;
-
-    Booking.findByIdAndDelete(bookingId)
-      .then((booking) => {
-        res.status(200).json({ message: "booking deleted", data: booking });
-      })
-      .catch((err) => {
-        res.status(400).json({ message: "booking cant be deleted" });
-      });
+  async destroy(req, res) {
+    try {
+      const { bookingId } = req.params;
+      const booking = Booking.findByIdAndDelete(bookingId);
+      res.status(200).json({ message: "booking deleted", data: booking });
+    } catch (err) {
+      res.status(400).json({ message: "booking cant be deleted" });
+    }
   },
 };
