@@ -4,31 +4,25 @@ const User = require("../models/user.model");
 
 module.exports = {
   // Get
-  list(req, res) {
-    Review.find()
-      .then((review) => {
-        res.status(200).json(review);
-      })
-      .catch((err) => {
-        res.status(400).json(err);
-      });
+  async list(req, res) {
+    try {
+      const review = await Review.find();
+      res.status(200).json(review);
+    } catch (err) {
+      res.status(400).json(err);
+    }
   },
   //Get by id
-  show(req, res) {
-    const { reviewId } = req.params;
-    Review.findById(reviewId)
-      // .populate({
-      //   path: "user",
-      //   Select: "name",
-      // })
-      .populate("userId", "name lastname email")
-      .populate("bookingSiteId")
-      .then((review) => {
-        res.status(200).json(review);
-      })
-      .catch((err) => {
-        res.status(404).json(err);
-      });
+  async show(req, res) {
+    try {
+      const { reviewId } = req.params;
+      const review = await Review.findById(reviewId)
+        .populate("userId", "name lastname email")
+        .populate("bookingSiteId", "title description");
+      res.status(200).json(review);
+    } catch (err) {
+      res.status(400).json(err);
+    }
   },
 
   //post
@@ -62,28 +56,27 @@ module.exports = {
   },
 
   //update
-  update(req, res) {
-    const { reviewId } = req.params;
-    Review.findByIdAndUpdate(reviewId, req.body, { new: true })
-      .then((review) => {
-        res.status(200).json({ message: "review updated", data: review });
-      })
-      .catch((err) => {
-        res
-          .status(400)
-          .json({ mmessage: "review could not be updated", data: err });
+  async update(req, res) {
+    try {
+      const { reviewId } = req.params;
+      const review = await Review.findByIdAndUpdate(reviewId, req.body, {
+        new: true,
       });
+      res.status(200).json({ message: "review updated", data: review });
+    } catch (err) {
+      res
+        .status(400)
+        .json({ mmessage: "review could not be updated", data: err });
+    }
   },
   //delete
-  destroy(req, res) {
-    const { reviewId } = req.params;
-
-    Review.findByIdAndDelete(reviewId)
-      .then((review) => {
-        res.status(200).json({ message: "review deleted", data: review });
-      })
-      .catch((err) => {
-        res.status(400).json({ message: "review cant be deleted" });
-      });
+  async destroy(req, res) {
+    try {
+      const { reviewId } = req.params;
+      const review = await Review.findByIdAndDelete(reviewId);
+      res.status(200).json({ message: "review deleted", data: review });
+    } catch (err) {
+      res.status(400).json({ message: "review cant be deleted", data: err });
+    }
   },
 };
