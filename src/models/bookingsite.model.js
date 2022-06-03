@@ -1,4 +1,7 @@
 const { Schema, model, models } = require("mongoose");
+const Booking = require("./booking.model");
+const Reviews = require("./review.model");
+const User = require("./user.model");
 
 const coordinatesRegex = new RegExp(
   "[-]?[0-9]*[.][0-9]*[,][-]?[0-9]*[.][0-9]*"
@@ -125,7 +128,7 @@ const BookingSiteSchema = new Schema(
     images: {
       type: String,
     },
-    user: {
+    userId: {
       type: Schema.Types.ObjectId, //Usuario con id único
       ref: "User",
       required: true,
@@ -134,12 +137,21 @@ const BookingSiteSchema = new Schema(
       type: [{ type: Schema.Types.ObjectId, ref: "Review" }],
       required: false,
     },
-        bookings: {
-        type: [{ type: Schema.Types.ObjectId, ref: "Booking" }],
-        required: false,
+      bookings: {
+      type: [{ type: Schema.Types.ObjectId, ref: "Booking" }],
+      required: false,
     },
   },
   { timestamps: true }
 );
+BookingSiteSchema.pre("deleteOne", async function(next){
+  try{
+    await Booking.deleteMany({bookingSiteId:this.getFilter()["_id"]})
+    await Reviews.deleteMany({bookingSiteId:this.getFilter()["_id"]})
+    next()
+  }catch (err){
+    next(err)
+  }
+} )
 const BookingSite = model("BookingSite", BookingSiteSchema);
 module.exports = BookingSite;

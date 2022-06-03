@@ -59,7 +59,7 @@ module.exports = {
     async destroy(req, res) {
         try{
         const { bookingSiteId } = req.params;
-        const bookingSite= await BookingSite.findByIdAndDelete(bookingSiteId);
+        const bookingSite= await BookingSite.deleteOne({_id: bookingSiteId});
         res.status(200).json({ message: "Booking Site deleted", data: bookingSite });
     }catch(err){
         res.status(404).json(err);

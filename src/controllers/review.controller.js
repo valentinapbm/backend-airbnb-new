@@ -75,7 +75,23 @@ module.exports = {
       const { reviewId } = req.params;
       const { userId, bookingSiteId } = req.body;
 
-      const review = await Review.findByIdAndDelete(reviewId,userId, bookingSiteId);
+      const userIdReview = await Review.findById(reviewId);
+
+      if(userIdReview.userId.toString() !== userId){
+        res.status(403).json({message:"user not authorize to delete"})
+        return
+      }
+      const review = await Review.findByIdAndDelete(reviewId);
+      const user= await User.findById(userId);
+      user.reviews= user.reviews.filter((item)=>
+        item._id.toString()  !== reviewId)
+      
+      user.save({validateBeforeSave: false})
+      const bookingSite = await BookingSite.findById(bookingSiteId);
+      bookingSite.reviews= bookingSite.reviews.filter((item)=>
+        item._id.toString()  !== reviewId)
+      
+      bookingSite.save({validateBeforeSave: false})
 
 
       res.status(200).json({ message: "review deleted", data: review });
