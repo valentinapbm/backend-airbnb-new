@@ -1,4 +1,6 @@
 const User = require("../models/user.model");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 module.exports = {
   //GET -READ
@@ -26,16 +28,16 @@ module.exports = {
   },
 
   //Create -POST
-  async create(req, res) {
-    try {
-      const data = req.body;
-      const newUser = { ...data };
-      const user = await User.create(newUser);
-      res.status(201).json({ message: "user created", data: user });
-    } catch (err) {
-      res.status(400).json({ message: "user could not be created", data: err });
-    }
-  },
+  // async create(req, res) {
+  //   try {
+  //     const data = req.body;
+  //     const newUser = { ...data };
+  //     const user = await User.create(newUser);
+  //     res.status(201).json({ message: "user created", data: user });
+  //   } catch (err) {
+  //     res.status(400).json({ message: "user could not be created", data: err });
+  //   }
+  // },
   //Update PUT
   async update(req, res) {
     try {
@@ -58,6 +60,58 @@ module.exports = {
       res.status(200).json({ message: "User deleted", data: user });
     } catch (err) {
       res.status(400).json({ message: "User could not be deleted", data: err });
+    }
+  },
+
+  async create(req, res) {
+    try {
+      const data = req.body;
+      const encPassword = await bcrypt.hash(data.password, 8);
+      const newUser = { ...data, password: encPassword };
+      const user = await User.create(newUser);
+
+      const token = jwt.sign(
+        { id: user._id }, //Payload ó datos usuario
+        process.env.SECRET_KEY, //llave secreta
+        { expiresIn: 60 * 60 * 24 }
+      );
+
+      res
+        .status(201)
+        .json({
+          message: "user created",
+          data: { token, name: user.name, email: user.email },
+        });
+    } catch (err) {
+      res.status(400).json({ message: "user could not be created", data: err });
+    }
+  },
+
+  async signin(req, res) {
+    try {
+      const { email, password } = req.body;
+
+      const user = await User.findOne({ email });
+
+      if (!user) {
+        throw new Error("user or password invalid");
+      }
+
+      const isValid = await bcrypt.compare(password, user.password);
+
+      if (!isValid) {
+        throw new Error("user or password invalid");
+      }
+
+      const token = jwt.sign(
+        { id: user._id }, //Payload ó datos usuario
+        process.env.SECRET_KEY, //llave secreta
+        { expiresIn: 60 * 60 * 24 }
+      );
+
+      res.status(201).json({ message: "user login successfully", data: token });
+    } catch (err) {
+      res.status(400).json({ message: "user cannot login" });
     }
   },
 };

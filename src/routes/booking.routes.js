@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const bookingController = require("../controllers/booking.controller");
+//const { auth } = require("../utils/auth")
 
 router.route("/").get(bookingController.list);
 router.route("/:bookingId").get(bookingController.show);

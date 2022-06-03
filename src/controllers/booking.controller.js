@@ -28,27 +28,28 @@ module.exports = {
   // post
   async create(req, res) {
     try {
-        const { userId, bookingSiteId } = req.body;
-        
-        const user = await User.findById(userId);
-        if (!user) {
-          throw new Error("Invalid user");
-        }
+      const { userId, bookingSiteId } = req.body;
+      //const userId = req.user
 
-        const bookingSite = await BookingSite.findById(bookingSiteId);
-        if (!bookingSite) {
-          throw new Error("Invalid bookingsite");
-        }
+      const user = await User.findById(userId);
+      if (!user) {
+        throw new Error("Invalid user");
+      }
 
-        const booking = await Booking.create({ ...req.body });
+      const bookingSite = await BookingSite.findById(bookingSiteId);
+      if (!bookingSite) {
+        throw new Error("Invalid bookingsite");
+      }
+      ``;
+      const booking = await Booking.create({ ...req.body });
 
-        user.bookings.push(booking);
-        bookingSite.bookings.push(booking);
+      user.bookings.push(booking);
+      bookingSite.bookings.push(booking);
 
-        await user.save({ validateBeforeSave: false });
-        await bookingSite.save({ validateBeforeSave: false });
+      await user.save({ validateBeforeSave: false });
+      await bookingSite.save({ validateBeforeSave: false });
 
-        res.status(201).json(booking);
+      res.status(201).json(booking);
     } catch (err) {
       res.status(400).json(err);
     }
@@ -59,7 +60,8 @@ module.exports = {
       const { bookingId } = req.params;
       const booking = Booking.findByIdAndUpdate(bookingId, req.body, {
         new: true,
-        runValidators: true, context: 'query'
+        runValidators: true,
+        context: "query",
       });
       res.status(200).json({ message: "booking updated", data: booking });
     } catch (err) {
