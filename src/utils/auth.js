@@ -23,7 +23,6 @@ exports.auth = (req, res, next) => {
 
     //Mutar el objeto req en el user (req.user) para poder acceder a el en cualquier parte
     req.user = id;
-
     next();
   } catch (err) {
     res.status(401).json({ message: err.message });
