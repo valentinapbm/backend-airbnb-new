@@ -15,8 +15,9 @@ module.exports = {
   //show ID
   async show(req, res) {
     try {
-      const { userId } = req.params;
-      const user = await User.findById(userId)
+      const id=req.user
+      console.log("este es el id", id)
+      const user = await User.findById(id)
         .select("-password")
         .populate("bookings", "date")
         .populate("reviews", "title message")
