@@ -5,7 +5,7 @@ const emailRegex = new RegExp(
 );
 const nameRegex = new RegExp("(?:[a-zA-Z](?:[a-zA-Z]*[a-zA-Z]+$)+$)+$");
 const birthdayRegex= new RegExp("[0-9]{2}[\/]{1}[0-9]{2}[\/]{1}[0-9]{4}$");
-const passRegex = new RegExp("(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$");
+const passRegex = new RegExp("^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$");
 const commentRegex = new RegExp("[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$");
 const userSchema = new Schema(
   
