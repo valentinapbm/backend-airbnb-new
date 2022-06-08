@@ -7,7 +7,7 @@ exports.auth = (req, res, next) => {
 
     //Para verificar que trae el encabezado
     if (!authorization) {
-      throw new Error("expired session");
+      throw new Error("expired session auth");
     }
 
     //Para separar el Bearer del token
@@ -15,7 +15,7 @@ exports.auth = (req, res, next) => {
 
     //Para verificar que trae el token
     if (!token) {
-      throw new Error("expired session");
+      throw new Error("expired session token");
     }
 
     //Reversión de la codificación del token

@@ -9,7 +9,7 @@ const { use } = require("express/lib/application");
 const { auth } = require("./src/utils/auth");
 require("dotenv").config();
 
-const port = process.env.Port;
+const port = process.env.PORT;
 const app = express();
 connect();
 
