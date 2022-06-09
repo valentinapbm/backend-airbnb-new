@@ -15,8 +15,8 @@ module.exports = {
   //show ID
   async show(req, res) {
     try {
-      const id=req.user
-      console.log("este es el id", id)
+      const id = req.user;
+      console.log("este es el id", id);
       const user = await User.findById(id)
         .select("-password")
         .populate("bookings", "date")
@@ -42,13 +42,17 @@ module.exports = {
   //Update PUT
   async update(req, res) {
     try {
-      const { userId } = req.params;
+      const userId = req.user;
       const user = await User.findByIdAndUpdate(userId, req.body, {
         new: true,
         runValidators: true,
         context: "query",
-      });
-      res.status(200).json({ message: "User updated", data: user });
+      })
+        .select("-password")
+        .populate("bookings", "date")
+        .populate("reviews", "title message")
+        .populate("bookingsites", "title description");
+      res.status(200).json({ message: "User updated" });
     } catch (err) {
       res.status(400).json({ message: "User could not be updated", data: err });
     }
@@ -77,12 +81,10 @@ module.exports = {
         { expiresIn: 60 * 60 * 24 }
       );
 
-      res
-        .status(201)
-        .json({
-          message: "user created",
-          data: { token, name: user.name, email: user.email },
-        });
+      res.status(201).json({
+        message: "user created",
+        data: { token, name: user.name, email: user.email },
+      });
     } catch (err) {
       res.status(400).json({ message: "user could not be created", data: err });
     }
