@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 function connect() {
-  mongoose.connect(`${process.env.MONGO_CONNECTION}/airbnb`);
+  mongoose.connect(process.env.MONGO_CONNECTION);
 
   mongoose.connection.once("open", () => {
     console.log("Connected with mongo");
