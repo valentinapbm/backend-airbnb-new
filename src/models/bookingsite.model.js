@@ -81,28 +81,14 @@ const BookingSiteSchema = new Schema(
     services: {
       type: [String],
       required: true,
-      enum: {
-        values: [
-          "pool",
-          "jacuzzi",
-          "bbq",
-          "woodfire",
-          "essentialservices",
-          "hotwater",
-          "wifi",
-          "tv",
-          "kitchen",
-          "washer",
-          "airconditioner",
-          "firstaidkit",
-        ],
-        message: "invalid services",
-      },
     },
-    coordinates: {
+    lat: {
       type: String,
       required: true,
-      match: [coordinatesRegex, "invalid coordinates"],
+    },
+    lng: {
+      type: String,
+      required: true,
     },
     title: {
       type: String,
@@ -128,10 +114,17 @@ const BookingSiteSchema = new Schema(
     images: {
       type: String,
     },
-    userId: {
-      type: Schema.Types.ObjectId, //Usuario con id único
-      ref: "User",
-      required: true,
+    address: {
+      type: String,
+    },
+    city: {
+      type: String,
+    },
+    country: {
+      type: String,
+    },
+    zipcode: {
+      type: Number,
     },
     reviews: {
       type: [{ type: Schema.Types.ObjectId, ref: "Review" }],

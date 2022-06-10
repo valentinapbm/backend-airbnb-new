@@ -30,9 +30,9 @@ module.exports = {
     //Create -POST
     async create(req,res){
         try{
-        const {userId}=req.params;
-        const user = await User.findById(userId);
-        
+            const id = req.user;
+            const user = await User.findById(id);
+
             if(!user){
                 throw new Error("Invalid user");
             }

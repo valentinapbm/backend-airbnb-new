@@ -26,6 +26,7 @@ app.get("/", auth, (req, res) => {
   res.sendStatus(200);
 });
 
+
 app.listen(port, () => {
   console.log("App running OK");
 });
