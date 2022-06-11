@@ -27,18 +27,13 @@ formData = (req, res, next) => {
 
     //Captura partes que si son un archivo
     bb.on("file", (key, stream) => {
-    uploadingFile = true;
-    uploadingCount++;
     const cloud = cloudinary.uploader.upload_stream(
-        { upload_preset: "lesson-preset" },
+        { upload_preset: "booking-image" },
         (err, res) => {
         if (err) throw new Error("Something went wrong!");
-
+        console.log(err)
         console.log("response cloudinary", res);
         req.body[key] = res;
-        uploadingFile = false;
-        uploadingCount--;
-        done();
         }
     );
 
