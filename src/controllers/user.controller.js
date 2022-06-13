@@ -1,6 +1,7 @@
 const User = require("../models/user.model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { transporter, welcome } = require("../utils/mailer");
 
 module.exports = {
   //GET -READ
@@ -51,7 +52,7 @@ module.exports = {
         .select("-password")
         .populate("bookings", "date")
         .populate("reviews", "title message")
-        .populate("bookingsites", "title description");
+        .populate("bookingsites", "title description price total_occupancy total_rooms total_beds total_bathrooms");
       res.status(200).json({ message: "User updated" });
     } catch (err) {
       res.status(400).json({ message: "User could not be updated", data: err });
@@ -80,7 +81,6 @@ module.exports = {
         process.env.SECRET_KEY, //llave secreta
         { expiresIn: 60 * 60 * 24 }
       );
-
       res.status(201).json({
         message: "user created",
         data: { token, name: user.name, email: user.email },

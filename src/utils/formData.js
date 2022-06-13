@@ -27,28 +27,24 @@ formData = (req, res, next) => {
 
     //Captura partes que si son un archivo
     bb.on("file", (key, stream) => {
-    uploadingFile = true;
-    uploadingCount++;
     const cloud = cloudinary.uploader.upload_stream(
-        { upload_preset: "lesson-preset" },
+        { upload_preset: "booking-image" },
         (err, res) => {
         if (err) throw new Error("Something went wrong!");
-
-        console.log("response cloudinary", res);
+        //console.log(err)
+        //console.log("response cloudinary", res);
         req.body[key] = res;
-        uploadingFile = false;
-        uploadingCount--;
-        done();
+        //console.log(res.secure_url)
         }
     );
 
     stream.on("data", (data) => {
-        console.log(data);
+        //console.log(data);
         cloud.write(data);
     });
 
     stream.on("end", () => {
-        console.log("finish");
+        //console.log("finish");
         cloud.end();
     });
     });
