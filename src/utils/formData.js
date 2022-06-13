@@ -31,19 +31,20 @@ formData = (req, res, next) => {
         { upload_preset: "booking-image" },
         (err, res) => {
         if (err) throw new Error("Something went wrong!");
-        console.log(err)
-        console.log("response cloudinary", res);
+        //console.log(err)
+        //console.log("response cloudinary", res);
         req.body[key] = res;
+        //console.log(res.secure_url)
         }
     );
 
     stream.on("data", (data) => {
-        console.log(data);
+        //console.log(data);
         cloud.write(data);
     });
 
     stream.on("end", () => {
-        console.log("finish");
+        //console.log("finish");
         cloud.end();
     });
     });

@@ -41,6 +41,7 @@ module.exports = {
         user.bookingsites.push(bookingsite);
         await user.save({validateBeforeSave:false});
         res.status(201).json({ message: "Booking Site created", data: bookingsite });
+        console.log("aquiesta:", res.secure_url)
     }catch (err) {
         res.status(400).json(err);
     }
