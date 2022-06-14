@@ -22,7 +22,7 @@ module.exports = {
         .select("-password")
         .populate("bookings", "date")
         .populate("reviews", "title message")
-        .populate("bookingsites", "title description");
+        .populate("bookingsites", "title description images");
       res.status(200).json(user);
     } catch (err) {
       res.status(404).json(err);

@@ -29,6 +29,10 @@ module.exports = {
 
     //Create -POST
     async create(req,res){
+        console.log("Cloudinary", req.body)
+        const listKeys= Object.values(req.body);
+        console.log(listKeys);
+        //Espacio para lógica de de llaves file a arreglo
         try{
             const id = req.user;
             const user = await User.findById(id);
@@ -36,9 +40,14 @@ module.exports = {
             if(!user){
                 throw new Error("Invalid user");
             }
-
+        const word ="https"
         const bookingsite = await BookingSite.create({...req.body, user: user})
-        user.bookingsites.push(bookingsite);
+        for(let i=0; i<listKeys.length;i++){
+            if(listKeys[i].includes(word)){
+                bookingsite.images.push(listKeys[i]);
+            }
+        }
+        await user.bookingsites.push(bookingsite);
         await user.save({validateBeforeSave:false});
         res.status(201).json({ message: "Booking Site created", data: bookingsite });
         console.log("aquiesta:", res.secure_url)
