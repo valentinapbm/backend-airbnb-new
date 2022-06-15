@@ -17,10 +17,7 @@ module.exports = {
         try{
             const { bookingSiteId } = req.params;
             
-            const bookingSite= await BookingSite.findById(bookingSiteId).populate({
-                path: "user",
-                select : "name lastname",
-            });
+            const bookingSite= await BookingSite.findById(bookingSiteId)
             res.status(200).json({ message: "Booking Site found", data: bookingSite });
         }catch (err){
             res.status(404).json(err);
@@ -44,11 +41,13 @@ module.exports = {
         const bookingsite = await BookingSite.create({...req.body, user: user})
         for(let i=0; i<listKeys.length;i++){
             if(listKeys[i].includes(word)){
-                bookingsite.images.push(listKeys[i]);
+                await bookingsite.images.push(listKeys[i]);
+                await bookingsite.save({validateBeforeSave:false});
             }
         }
         await user.bookingsites.push(bookingsite);
         await user.save({validateBeforeSave:false});
+        console.log(bookingsite.images)
         res.status(201).json({ message: "Booking Site created", data: bookingsite });
         console.log("aquiesta:", res.secure_url)
     }catch (err) {
