@@ -9,8 +9,7 @@ const bookingSiteRouter = require("./src/routes/bookingsite.router");
 const { use } = require("express/lib/application");
 const { auth } = require("./src/utils/auth");
 require("dotenv").config();
-const { transporter, verify} = require("./src/utils/mailer");
-
+const { transporter, verify } = require("./src/utils/mailer");
 
 const port = process.env.PORT;
 const app = express();
@@ -20,7 +19,6 @@ connect();
 app.use(cors());
 app.use(express.json());
 app.use(morgan("dev"));
-
 
 app.use("/users", userRouter);
 app.use("/bookings", bookingRouter);
@@ -36,7 +34,6 @@ app.post("/", formData, (req, res) => {
   console.log("profile");
   res.status(200).send({ ...req.body });
 });
-
 
 app.listen(port, () => {
   console.log("App running OK");
