@@ -116,15 +116,19 @@ const BookingSiteSchema = new Schema(
     },
     address: {
       type: String,
+      required: true
     },
     city: {
       type: String,
+      required: true
     },
     country: {
       type: String,
+      required: true
     },
     zipcode: {
-      type: Number,
+      type:   Number,
+      
     },
     reviews: {
       type: [{ type: Schema.Types.ObjectId, ref: "Review" }],
