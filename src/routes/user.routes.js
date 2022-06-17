@@ -8,5 +8,9 @@ router.route("/singup").post(userController.create);
 router.route("/login").post(userController.signin);
 router.route("/update").put(auth, userController.update);
 router.route("/:userId").delete(userController.destroy);
+router.route("/recoverypassword").post(userController.recoveryPass);
+router.route("/resetpassword").post(auth,userController.resetPass);
+
+
 
 module.exports = router;
