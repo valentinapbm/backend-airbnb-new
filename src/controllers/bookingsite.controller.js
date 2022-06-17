@@ -18,10 +18,9 @@ module.exports = {
     try {
       const { bookingSiteId } = req.params;
 
-      const bookingSite = await BookingSite.findById(bookingSiteId).populate({
-        path: "user",
-        select: "name lastname",
-      });
+      const bookingSite = await BookingSite.findById(bookingSiteId);
+      // .select()
+      // .populate("users", "name lastname");
       res
         .status(200)
         .json({ message: "Booking Site found", data: bookingSite });
