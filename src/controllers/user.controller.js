@@ -53,7 +53,7 @@ module.exports = {
         .select("-password")
         .populate("bookings", "date")
         .populate("reviews", "title message")
-        .populate("bookingsites", "title description price total_occupancy total_rooms total_beds total_bathrooms");
+        .populate("bookingsites");
       res.status(200).json({ message: "User updated" });
     } catch (err) {
       res.status(400).json({ message: "User could not be updated", data: err });
