@@ -79,7 +79,7 @@ const BookingSiteSchema = new Schema(
       max: [50, "must be lower than 50"],
     },
     services: {
-      type: [String],
+      type: Array,
       required: true,
     },
     lat: {
@@ -100,10 +100,6 @@ const BookingSiteSchema = new Schema(
     description: {
       type: String,
       required: true,
-      match: [
-        commentRegex,
-        "description must contain only letters and numbers",
-      ],
       minlength: [20, "description too short"],
       maxlength: [200, "description too long"],
     },
@@ -112,21 +108,22 @@ const BookingSiteSchema = new Schema(
       required: true,
     },
     images: {
-      type: [String],
+      type: Array,
     },
     address: {
       type: String,
-      required: true
+      required: true,
     },
     city: {
       type: String,
-      required: true
+      required: true,
     },
     country: {
       type: String,
-      required: true
+      required: true,
     },
     zipcode: {
+
       type:  String,
       
     },
@@ -134,21 +131,21 @@ const BookingSiteSchema = new Schema(
       type: [{ type: Schema.Types.ObjectId, ref: "Review" }],
       required: false,
     },
-      bookings: {
+    bookings: {
       type: [{ type: Schema.Types.ObjectId, ref: "Booking" }],
       required: false,
     },
   },
   { timestamps: true }
 );
-BookingSiteSchema.pre("deleteOne", async function(next){
-  try{
-    await Booking.deleteMany({bookingSiteId:this.getFilter()["_id"]})
-    await Reviews.deleteMany({bookingSiteId:this.getFilter()["_id"]})
-    next()
-  }catch (err){
-    next(err)
+BookingSiteSchema.pre("deleteOne", async function (next) {
+  try {
+    await Booking.deleteMany({ bookingSiteId: this.getFilter()["_id"] });
+    await Reviews.deleteMany({ bookingSiteId: this.getFilter()["_id"] });
+    next();
+  } catch (err) {
+    next(err);
   }
-} )
+});
 const BookingSite = model("BookingSite", BookingSiteSchema);
 module.exports = BookingSite;

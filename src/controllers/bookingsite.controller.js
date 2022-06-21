@@ -19,6 +19,8 @@ module.exports = {
       const { bookingSiteId } = req.params;
 
       const bookingSite = await BookingSite.findById(bookingSiteId);
+      // .select()
+      // .populate("users", "name lastname");
       res
         .status(200)
         .json({ message: "Booking Site found", data: bookingSite });
@@ -50,7 +52,6 @@ module.exports = {
       }
       await user.bookingsites.push(bookingsite);
       await user.save({ validateBeforeSave: false });
-      console.log(bookingsite.images);
       res
         .status(201)
         .json({ message: "Booking Site created", data: bookingsite });
@@ -58,39 +59,50 @@ module.exports = {
     } catch (err) {
       res.status(400).json(err);
     }
-  },
-  //Update PUT
-  async update(req, res) {
-    try {
-      const { bookingSiteId } = req.params;
-      const id = req.user;
-      const bookingSite = await BookingSite.findByIdAndUpdate(
-        bookingSiteId,
-        req.body,
-        { new: true, runValidators: true, context: "query" }
-      );
-      res
-        .status(200)
-        .json({ message: "Booking Site updated", data: bookingSite });
-    } catch (err) {
-      res.status(404).json(err);
-    }
-  },
-  //Delete
-  async destroy(req, res) {
-    try {
-      const id = req.user;
-      const user = await User.findById(id);
-      const { bookingSiteId } = req.params;
-      const bookingSite = await BookingSite.findByIdAndDelete(bookingSiteId);
-      await user.bookingsites.filter((item) => {
-        item._id.toString() !== bookingSiteId;
-      });
-      res
-        .status(200)
-        .json({ message: "Booking Site deleted", data: bookingSite });
-    } catch (err) {
-      res.status(404).json(err);
-    }
-  },
+
+    },
+    //Update PUT
+    async update(req, res){
+        
+        const listKeys= Object.values(req.body);
+        const asArray= Object.entries(req.body);
+        console.log("Cloudinary", req.body)
+        try{
+            
+            const id = req.user;
+            const { bookingSiteId } = req.params;
+            const user = await User.findById(id);
+
+            if(!user){
+                throw new Error("Invalid user");
+            }
+            const bookingSite= await BookingSite.findByIdAndUpdate(bookingSiteId, req.body, { new: true, returnOriginal: false, runValidators: true, useFindAndModify: false,upsert:true,returnDocument:"after", overwrite:true});
+            const filtered = asArray.filter(([key, value]) =>  key.includes("file"));
+            console.log(filtered)
+            for(let j=0; j<filtered.length;j++){
+                console.log("AQUI",filtered[j][1])
+                    if(filtered[j][1].includes("https")){
+                    await bookingSite.images.push(filtered[j][1])
+                    await bookingSite.save({validateBeforeSave:false});
+                }
+            }
+            console.log(bookingSite)
+            res.status(200).json({ message: "Booking Site updated", data: bookingSite });
+        }catch(err){
+            res.status(404).json(err);
+        }
+    },
+    //Delete
+    async destroy(req, res) {
+        try{
+        const id = req.user;
+        const user = await User.findById(id);
+        const { bookingSiteId } = req.params;
+        const bookingSite= await BookingSite.findByIdAndDelete(bookingSiteId);
+        await user.bookingsites.filter((item)=>{
+            item._id.toString() !== bookingSiteId
+        })
+        res.status(200).json({ message: "Booking Site deleted", data: bookingSite });
+    }catch(err){
+        res.status(404).json(err);
 };
