@@ -127,7 +127,7 @@ const BookingSiteSchema = new Schema(
       required: true
     },
     zipcode: {
-      type:   Number,
+      type:  String,
       
     },
     reviews: {

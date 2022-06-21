@@ -12,5 +12,9 @@ router
   .route("/updateImage")
   .post(auth, formData("profile-image"), userController.updateImage);
 router.route("/:userId").delete(userController.destroy);
+router.route("/recoverypassword").post(userController.recoveryPass);
+router.route("/resetpassword").post(auth,userController.resetPass);
+
+
 
 module.exports = router;
