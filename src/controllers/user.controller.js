@@ -1,7 +1,8 @@
 const User = require("../models/user.model");
+
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { transporter, welcome } = require("../utils/mailer");
+const { transporter, recoverypassword, resetpassword } = require("../utils/mailer");
 
 module.exports = {
   //GET -READ
@@ -22,7 +23,7 @@ module.exports = {
         .select("-password")
         .populate("bookings", "date")
         .populate("reviews", "title message")
-        .populate("bookingsites", "title description images");
+        .populate("bookingsites");
       res.status(200).json(user);
     } catch (err) {
       res.status(404).json(err);
@@ -115,6 +116,43 @@ module.exports = {
       res.status(201).json({ message: "user login successfully", data: token });
     } catch (err) {
       res.status(400).json({ message: "user cannot login" });
+    }
+  },
+
+  async recoveryPass(req, res) {
+    try {
+      const { email} = req.body;
+      console.log(email)
+      const user = await User.findOne({ email });
+      console.log(user)
+      if (!user) {
+        throw new Error("Email not found");
+      }
+      const token = jwt.sign(
+        { email }, //Payload ó datos usuario
+        process.env.SECRET_KEY, //llave secreta
+        { expiresIn: 60 * 60 * 24 }
+      );
+      await transporter.sendMail(recoverypassword(email,token,user.name))
+      res.status(201).json({ message: "email sent", data: token });
+    } catch (err) {
+      res.status(400).json({ message: "email was not sent" });
+    }
+  },
+  async resetPass(req, res) {
+    try {
+      const email =req.email;
+      const {newpassword} = req.body;
+      const user = await User.findOne({ email });
+      if (!user) {
+        throw new Error("Email not found");
+      }
+      const encPassword = await bcrypt.hash(newpassword, 8);
+      await User.findByIdAndUpdate(user._id,{ password: encPassword }, { new: true, useFindAndModify: false,  runValidators: true,})
+      await transporter.sendMail(resetpassword(email,user.name))
+      res.status(201).json({ message: 'password updated successfully' })
+    } catch (err) {
+      res.status(400).json({ message: "'password was not updated" });
     }
   },
 };

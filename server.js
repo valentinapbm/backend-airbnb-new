@@ -6,7 +6,6 @@ const userRouter = require("./src/routes/user.routes");
 const bookingRouter = require("./src/routes/booking.routes");
 const reviewRouter = require("./src/routes/review.routes");
 const bookingSiteRouter = require("./src/routes/bookingsite.router");
-const { use } = require("express/lib/application");
 const { auth } = require("./src/utils/auth");
 require("dotenv").config();
 const { transporter, verify} = require("./src/utils/mailer");
@@ -15,7 +14,7 @@ const { transporter, verify} = require("./src/utils/mailer");
 const port = process.env.PORT;
 const app = express();
 connect();
-//verify(transporter);
+verify(transporter);
 
 app.use(cors());
 app.use(express.json());

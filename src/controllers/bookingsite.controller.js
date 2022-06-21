@@ -59,33 +59,33 @@ module.exports = {
     } catch (err) {
       res.status(400).json(err);
     }
-  },
-  //Update PUT
-  async update(req, res) {
-    try {
-      const { bookingSiteId } = req.params;
-      const bookingSite = await BookingSite.findByIdAndUpdate(
-        bookingSiteId,
-        req.body,
-        { new: true, runValidators: true, context: "query" }
-      );
-      res
-        .status(200)
-        .json({ message: "Booking Site updated", data: bookingSite });
-    } catch (err) {
-      res.status(404).json(err);
-    }
-  },
-  //Delete
-  async destroy(req, res) {
-    try {
-      const { bookingSiteId } = req.params;
-      const bookingSite = await BookingSite.deleteOne({ _id: bookingSiteId });
-      res
-        .status(200)
-        .json({ message: "Booking Site deleted", data: bookingSite });
-    } catch (err) {
-      res.status(404).json(err);
-    }
-  },
-};
+
+    },
+    //Update PUT
+    async update(req, res){
+        try{
+            const { bookingSiteId } = req.params;
+            const id = req.user;
+            const bookingSite= await BookingSite.findByIdAndUpdate(bookingSiteId, req.body, { new: true, runValidators: true, context: 'query' });
+            res.status(200).json({ message: "Booking Site updated", data: bookingSite });
+        }catch(err){
+            res.status(404).json(err);
+        }
+    },
+    //Delete
+    async destroy(req, res) {
+        try{
+        const id = req.user;
+        const user = await User.findById(id);
+        const { bookingSiteId } = req.params;
+        const bookingSite= await BookingSite.findByIdAndDelete(bookingSiteId);
+        await user.bookingsites.filter((item)=>{
+            item._id.toString() !== bookingSiteId
+        })
+        res.status(200).json({ message: "Booking Site deleted", data: bookingSite });
+    }catch(err){
+        res.status(404).json(err);
+        };
+    },
+}
+
