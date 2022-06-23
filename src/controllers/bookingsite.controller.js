@@ -105,7 +105,4 @@ module.exports = {
         res.status(200).json({ message: "Booking Site deleted", data: bookingSite });
     }catch(err){
         res.status(404).json(err);
-        };
-    },
-}
-
+};
