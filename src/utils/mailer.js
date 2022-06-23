@@ -2,14 +2,14 @@ const nodemailer = require("nodemailer");
 require("dotenv").config();
 
 exports.transporter = nodemailer.createTransport({
-  host: 'smtp.aol.com',
-  port: 465,
-  secure: true,
+  service: 'gmail',
+  host: 'smtp.gmail.com',
+  secure:false,
   auth: {
-    user: 'airbnbclon@aol.com',
-    pass: 'abbxgrqqymznhutz', 
-  },
-  tls : { rejectUnauthorized: false }
+        user: 'clon.airbnb@gmail.com',
+        pass: 'uuconqqyzacbwbpb'
+    },
+  tls : { rejectUnauthorized: false}
 });
 
 exports.verify = async (transporter) => {
@@ -26,7 +26,7 @@ exports.recoverypassword = (email, token, name) => {
   };
 
   return {
-    from: `"Airbnb" <airbnbclon@aol.com>`,
+    from: `"Airbnb" <clon.airbnb@gmail.com>`,
     to: email,
     subject: "Recuperar contraseña",
     html: `
@@ -56,7 +56,7 @@ exports.resetpassword = (email,name) => {
   };
 
   return {
-    from: `"Airbnb" <airbnbclon@aol.com>`,
+    from: `"Airbnb" <clon.airbnb@gmail.com>`,
     to: email,
     subject: "Contraseña reestablecida",
     html: `

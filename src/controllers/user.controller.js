@@ -122,9 +122,9 @@ module.exports = {
   async recoveryPass(req, res) {
     try {
       const { email} = req.body;
-      console.log(email)
-      const user = await User.findOne({ email });
-      console.log(user)
+      console.log("this",email)
+      const user = await User.findOne({ email:email });
+      console.log("this",user)
       if (!user) {
         throw new Error("Email not found");
       }
@@ -133,6 +133,7 @@ module.exports = {
         process.env.SECRET_KEY, //llave secreta
         { expiresIn: 60 * 60 * 24 }
       );
+      console.log(token)
       await transporter.sendMail(recoverypassword(email,token,user.name))
       res.status(201).json({ message: "email sent", data: token });
     } catch (err) {

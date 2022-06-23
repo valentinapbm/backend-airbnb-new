@@ -26,7 +26,7 @@ module.exports = {
 
     //Create -POST
     async create(req,res){
-        console.log("Cloudinary", req.body)
+
         const listKeys= Object.values(req.body);
         console.log(listKeys);
         //Espacio para lógica de de llaves file a arreglo
