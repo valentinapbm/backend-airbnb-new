@@ -79,7 +79,7 @@ const BookingSiteSchema = new Schema(
       max: [50, "must be lower than 50"],
     },
     services: {
-      type: [String],
+      type: Array,
       required: true,
     },
     lat: {
@@ -100,10 +100,6 @@ const BookingSiteSchema = new Schema(
     description: {
       type: String,
       required: true,
-      match: [
-        commentRegex,
-        "description must contain only letters and numbers",
-      ],
       minlength: [20, "description too short"],
       maxlength: [200, "description too long"],
     },
@@ -112,7 +108,7 @@ const BookingSiteSchema = new Schema(
       required: true,
     },
     images: {
-      type: [String],
+      type: Array,
     },
     address: {
       type: String,
