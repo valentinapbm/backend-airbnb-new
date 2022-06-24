@@ -27,7 +27,7 @@ module.exports = {
         .status(200)
         .json({ message: "Booking Site found", data: bookingSite });
     } catch (err) {
-      res.status(404).json(err);
+      res.status(404).json(err); 
     }
   },
 
@@ -43,21 +43,21 @@ module.exports = {
       if (!user) {
         throw new Error("Invalid user");
       }
+      console.log(user)
       const word = "https";
       const bookingsite = await BookingSite.create({
         ...req.body,
         userId: user._id,
       });
-
+      console.log("nuevo",bookingsite)
       for (let i = 0; i < listKeys.length; i++) {
-        if (listKeys[i].includes(word)) {
-          await bookingsite.images.push(listKeys[i]);
+        if (listKeys[i].secure_url !== undefined) {
+          await bookingsite.images.push(listKeys[i].secure_url);
           await bookingsite.save({ validateBeforeSave: false });
         }
       }
       await user.bookingsites.push(bookingsite);
       await user.save({ validateBeforeSave: false });
-      //   console.log(bookingsite.images);
       res
         .status(201)
         .json({ message: "Booking Site created", data: bookingsite });
@@ -101,38 +101,7 @@ module.exports = {
     }
   },
 
-  //Create -POST
-  async create(req, res) {
-    console.log("Cloudinary", req.body);
-    const listKeys = Object.values(req.body);
-    console.log(listKeys);
-    //Espacio para lógica de de llaves file a arreglo
-    try {
-      const id = req.user;
-      const user = await User.findById(id);
 
-      if (!user) {
-        throw new Error("Invalid user");
-      }
-      const word = "https";
-      const bookingsite = await BookingSite.create({ ...req.body, user: user });
-      for (let i = 0; i < listKeys.length; i++) {
-        if (listKeys[i].secure_url !== undefined) {
-          await bookingsite.images.push(listKeys[i].secure_url);
-          await bookingsite.save({ validateBeforeSave: false });
-        }
-      }
-      await user.bookingsites.push(bookingsite);
-      await user.save({ validateBeforeSave: false });
-      res
-        .status(201)
-        .json({ message: "Booking Site created", data: bookingsite });
-      console.log(user);
-    } catch (err) {
-      res.status(400).json(err);
-    }
-
-    },
     //Update PUT
     async update(req, res){
         
