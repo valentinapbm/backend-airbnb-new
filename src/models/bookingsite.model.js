@@ -116,39 +116,39 @@ const BookingSiteSchema = new Schema(
     },
     address: {
       type: String,
-      required: true
+      required: true,
     },
     city: {
       type: String,
-      required: true
+      required: true,
     },
     country: {
       type: String,
-      required: true
+      required: true,
     },
     zipcode: {
-      type:  String,
-      
+      type: String,
     },
     reviews: {
       type: [{ type: Schema.Types.ObjectId, ref: "Review" }],
       required: false,
     },
-      bookings: {
+    bookings: {
       type: [{ type: Schema.Types.ObjectId, ref: "Booking" }],
       required: false,
     },
+    userId: { type: Schema.Types.ObjectId, ref: "User", require: true },
   },
   { timestamps: true }
 );
-BookingSiteSchema.pre("deleteOne", async function(next){
-  try{
-    await Booking.deleteMany({bookingSiteId:this.getFilter()["_id"]})
-    await Reviews.deleteMany({bookingSiteId:this.getFilter()["_id"]})
-    next()
-  }catch (err){
-    next(err)
+BookingSiteSchema.pre("deleteOne", async function (next) {
+  try {
+    await Booking.deleteMany({ bookingSiteId: this.getFilter()["_id"] });
+    await Reviews.deleteMany({ bookingSiteId: this.getFilter()["_id"] });
+    next();
+  } catch (err) {
+    next(err);
   }
-} )
+});
 const BookingSite = model("BookingSite", BookingSiteSchema);
 module.exports = BookingSite;
