@@ -43,24 +43,21 @@ module.exports = {
   // },
   //Update PUT
   async updateImage(req, res) {
+
     try {
-      console.log("req.body0: ", req.body, "res.user0: ", req.user);
-      const { image: image } = req.body;
-      console.log("req.body1: ", image);
-      const upImage = await User.findByIdAndUpdate(
-        req.user,
-        { image: image },
+      const id = req.user;
+      const image= req.body.file.secure_url;
+
+      const upImage = await User.findByIdAndUpdate(req.user, {image: image },
         {
           new: true,
           runValidators: true,
           context: "query",
         }
       );
-      if (!image) {
-        throw new Error("Image could not be update");
-      }
 
-      res.status(200).json({ message: "User updated", data: image });
+
+      res.status(200).json({ message: "User  Image updated", data: upImage });
     } catch (err) {
       res.status(400).json({ message: "User could not be updated", data: err });
     }
@@ -77,15 +74,7 @@ module.exports = {
         .select("-password")
         .populate("bookings", "date")
         .populate("reviews", "title message")
-<<<<<<< HEAD
-        .populate(
-          "bookingsites",
-          "title description price total_occupancy total_rooms total_beds total_bathrooms"
-        );
-      console.log();
-=======
         .populate("bookingsites");
->>>>>>> 297657f3ea92a62063a5a505b210092f99462993
       res.status(200).json({ message: "User updated" });
     } catch (err) {
       res.status(400).json({ message: "User could not be updated", data: err });
@@ -154,9 +143,9 @@ module.exports = {
   async recoveryPass(req, res) {
     try {
       const { email} = req.body;
-      console.log(email)
-      const user = await User.findOne({ email });
-      console.log(user)
+      console.log("this",email)
+      const user = await User.findOne({ email:email });
+      console.log("this",user)
       if (!user) {
         throw new Error("Email not found");
       }
@@ -165,6 +154,7 @@ module.exports = {
         process.env.SECRET_KEY, //llave secreta
         { expiresIn: 60 * 60 * 24 }
       );
+      console.log(token)
       await transporter.sendMail(recoverypassword(email,token,user.name))
       res.status(201).json({ message: "email sent", data: token });
     } catch (err) {

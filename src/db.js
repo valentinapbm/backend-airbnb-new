@@ -13,4 +13,4 @@ function connect() {
 
   return mongoose.connection;
 }
-module.exports = { connect };
+module.exports = { connect }; 

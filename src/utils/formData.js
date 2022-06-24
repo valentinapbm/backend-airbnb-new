@@ -48,7 +48,7 @@ function formData(preset) {
           if (err) throw new Error("Something went wrong!");
 
           //console.log("response cloudinary", res);
-          req.body[key] = res.secure_url;
+          req.body[key] = res;
           console.log("Res.secure_URL:_", res.secure_url);
           uploadingFile = false;
           uploadingCount--;

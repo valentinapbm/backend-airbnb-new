@@ -101,7 +101,6 @@ const BookingSiteSchema = new Schema(
       type: String,
       required: true,
       minlength: [20, "description too short"],
-      maxlength: [200, "description too long"],
     },
     price: {
       type: Number,
