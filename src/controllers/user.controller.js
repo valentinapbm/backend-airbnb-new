@@ -43,24 +43,21 @@ module.exports = {
   // },
   //Update PUT
   async updateImage(req, res) {
+
     try {
-      console.log("req.body0: ", req.body, "res.user0: ", req.user);
-      const { image: image } = req.body;
-      console.log("req.body1: ", image);
-      const upImage = await User.findByIdAndUpdate(
-        req.user,
-        { image: image },
+      const id = req.user;
+      const image= req.body.file.secure_url;
+
+      const upImage = await User.findByIdAndUpdate(req.user, {image: image },
         {
           new: true,
           runValidators: true,
           context: "query",
         }
       );
-      if (!image) {
-        throw new Error("Image could not be update");
-      }
 
-      res.status(200).json({ message: "User updated", data: image });
+
+      res.status(200).json({ message: "User  Image updated", data: upImage });
     } catch (err) {
       res.status(400).json({ message: "User could not be updated", data: err });
     }
