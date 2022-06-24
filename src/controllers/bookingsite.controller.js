@@ -117,8 +117,8 @@ module.exports = {
       const word = "https";
       const bookingsite = await BookingSite.create({ ...req.body, user: user });
       for (let i = 0; i < listKeys.length; i++) {
-        if (listKeys[i].includes(word)) {
-          await bookingsite.images.push(listKeys[i]);
+        if (listKeys[i].secure_url !== undefined) {
+          await bookingsite.images.push(listKeys[i].secure_url);
           await bookingsite.save({ validateBeforeSave: false });
         }
       }
@@ -127,7 +127,7 @@ module.exports = {
       res
         .status(201)
         .json({ message: "Booking Site created", data: bookingsite });
-      console.log("aquiesta:", res.secure_url);
+      console.log(user);
     } catch (err) {
       res.status(400).json(err);
     }
