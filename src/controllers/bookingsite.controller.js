@@ -66,23 +66,7 @@ module.exports = {
       res.status(400).json(err);
     }
   },
-  //Update PUT
-  async update(req, res) {
-    try {
-      const { bookingSiteId } = req.params;
-      const id = req.user;
-      const bookingSite = await BookingSite.findByIdAndUpdate(
-        bookingSiteId,
-        req.body,
-        { new: true, runValidators: true, context: "query" }
-      );
-      res
-        .status(200)
-        .json({ message: "Booking Site updated", data: bookingSite });
-    } catch (err) {
-      res.status(404).json(err);
-    }
-  },
+
   //Delete
   async destroy(req, res) {
     try {
@@ -117,15 +101,14 @@ module.exports = {
             if(!user){
                 throw new Error("Invalid user");
             }
-            const bookingSite= await BookingSite.findByIdAndUpdate(bookingSiteId, req.body, { new: true, returnOriginal: false, runValidators: true, useFindAndModify: false,upsert:true,returnDocument:"after", overwrite:true});
+            const bookingSite= await BookingSite.findByIdAndUpdate(bookingSiteId, req.body, { new: true, runValidators: true});
             const filtered = asArray.filter(([key, value]) =>  key.includes("file"));
             console.log(filtered)
             for(let j=0; j<filtered.length;j++){
-                console.log("AQUI",filtered[j][1])
-                    if(filtered[j][1].includes("https")){
-                    await bookingSite.images.push(filtered[j][1])
+                console.log("AQUI",filtered[j][1].secure_url)
+                    await bookingSite.images.push(filtered[j][1].secure_url)
                     await bookingSite.save({validateBeforeSave:false});
-                }
+                
             }
             console.log(bookingSite)
             res.status(200).json({ message: "Booking Site updated", data: bookingSite });
