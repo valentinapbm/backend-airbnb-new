@@ -94,13 +94,10 @@ const BookingSiteSchema = new Schema(
       type: String,
       required: true,
       match: [commentRegex, "title must contain only letters and numbers"],
-      minlength: [10, "title too short"],
-      maxlength: [50, "title too long"],
     },
     description: {
       type: String,
       required: true,
-      minlength: [20, "description too short"],
     },
     price: {
       type: Number,
