@@ -13,10 +13,9 @@ const bookingSchema = new Schema(
       required: true,
     },
     date: {
-      type: String,
+      type: [String],
       required: true,
     },
-
   },
   {
     timestamps: true,

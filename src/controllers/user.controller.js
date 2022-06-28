@@ -2,7 +2,11 @@ const User = require("../models/user.model");
 
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { transporter, recoverypassword, resetpassword } = require("../utils/mailer");
+const {
+  transporter,
+  recoverypassword,
+  resetpassword,
+} = require("../utils/mailer");
 
 module.exports = {
   //GET -READ
@@ -43,19 +47,19 @@ module.exports = {
   // },
   //Update PUT
   async updateImage(req, res) {
-
     try {
       const id = req.user;
-      const image= req.body.file.secure_url;
+      const image = req.body.file.secure_url;
 
-      const upImage = await User.findByIdAndUpdate(req.user, {image: image },
+      const upImage = await User.findByIdAndUpdate(
+        req.user,
+        { image: image },
         {
           new: true,
           runValidators: true,
           context: "query",
         }
       );
-
 
       res.status(200).json({ message: "User  Image updated", data: upImage });
     } catch (err) {
@@ -142,10 +146,10 @@ module.exports = {
 
   async recoveryPass(req, res) {
     try {
-      const { email} = req.body;
-      console.log("this",email)
-      const user = await User.findOne({ email:email });
-      console.log("this",user)
+      const { email } = req.body;
+      console.log("this", email);
+      const user = await User.findOne({ email: email });
+      console.log("this", user);
       if (!user) {
         throw new Error("Email not found");
       }
@@ -154,8 +158,8 @@ module.exports = {
         process.env.SECRET_KEY, //llave secreta
         { expiresIn: 60 * 60 * 24 }
       );
-      console.log(token)
-      await transporter.sendMail(recoverypassword(email,token,user.name))
+      console.log(token);
+      await transporter.sendMail(recoverypassword(email, token, user.name));
       res.status(201).json({ message: "email sent", data: token });
     } catch (err) {
       res.status(400).json({ message: "email was not sent" });
@@ -163,18 +167,61 @@ module.exports = {
   },
   async resetPass(req, res) {
     try {
-      const email =req.email;
-      const {newpassword} = req.body;
+      const email = req.email;
+      const { newpassword } = req.body;
       const user = await User.findOne({ email });
       if (!user) {
         throw new Error("Email not found");
       }
       const encPassword = await bcrypt.hash(newpassword, 8);
-      await User.findByIdAndUpdate(user._id,{ password: encPassword }, { new: true, useFindAndModify: false,  runValidators: true,})
-      await transporter.sendMail(resetpassword(email,user.name))
-      res.status(201).json({ message: 'password updated successfully' })
+      await User.findByIdAndUpdate(
+        user._id,
+        { password: encPassword },
+        { new: true, useFindAndModify: false, runValidators: true }
+      );
+      await transporter.sendMail(resetpassword(email, user.name));
+      res.status(201).json({ message: "password updated successfully" });
     } catch (err) {
       res.status(400).json({ message: "'password was not updated" });
+    }
+  },
+  async changePass(req, res) {
+    try {
+      const userId = req.user;
+      let message = "Invalid old password";
+      console.log("Userid:", userId);
+      const { password, newpassword } = req.body;
+      let authorization = false;
+      console.log("Body: ", req.body);
+      const user = await User.findById(userId);
+      if (!user) {
+        throw new Error({ message: "User not found" });
+      }
+      console.log("User: ", user);
+      const isValid = await bcrypt.compare(password, user.password);
+      console.log("IsValid:", isValid);
+      if (isValid) {
+        const encPassword = await bcrypt.hash(newpassword, 8);
+        console.log("encPassword: ", encPassword);
+        const user = await User.findByIdAndUpdate(
+          userId,
+          { password: encPassword },
+          { new: true, runValidators: true, context: "query" }
+        );
+        console.log("paso");
+        authorization = true;
+        message = "password update successfully";
+        console.log("User: ", message);
+        //await transporter.sendMail(resetpassword(user.email, user.name));
+      } /*else {
+        //throw new Error({ message: "Invalid Password" });
+      }*/
+      res.status(201).json({
+        message: message,
+        data: authorization,
+      });
+    } catch (err) {
+      res.status(500).json({ message: "password was not updated", data: err });
     }
   },
 };
