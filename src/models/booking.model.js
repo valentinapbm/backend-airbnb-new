@@ -12,11 +12,12 @@ const bookingSchema = new Schema(
       ref: "User",
       required: true,
     },
-    date: {
-      type: String,
-      required: true,
-    },
-
+    date: [
+      {
+        type: String,
+        required: true,
+      },
+    ],
   },
   {
     timestamps: true,

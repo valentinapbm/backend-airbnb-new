@@ -28,9 +28,9 @@ module.exports = {
   // post
   async create(req, res) {
     try {
-      const { userId, bookingSiteId } = req.body;
-      //const userId = req.user
-      
+      const { bookingSiteId } = req.body;
+      const userId = req.user;
+
       const user = await User.findById(userId);
       if (!user) {
         throw new Error("Invalid user");
@@ -40,7 +40,11 @@ module.exports = {
       if (!bookingSite) {
         throw new Error("Invalid bookingsite");
       }
-      const booking = await Booking.create({ ...req.body });
+      const booking = await Booking.create({
+        ...req.body,
+        userId: user._id,
+        bookingSiteId: bookingSite,
+      });
 
       user.bookings.push(booking);
       bookingSite.bookings.push(booking);
