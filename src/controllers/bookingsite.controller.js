@@ -13,6 +13,24 @@ module.exports = {
       res.status(500).json(err);
     }
   },
+  //LIST FILTER
+  async filter(req, res) {
+    try {
+      const data = req.query;
+      console.log("hola", req.query)
+      const {city, total_occupancy}=data;
+      console.log(data)
+      const bookingSitesfilter = await BookingSite.find({city: {$eq:city}, total_occupancy:{$gte:total_occupancy}});
+
+      console.log(bookingSitesfilter)
+      res
+        .status(200)
+        .json({ message: "Booking Sites  filter found", data: bookingSitesfilter });
+    } catch (err) {
+      res.status(400).json(err); 
+    }
+  },
+
   //show ID
   async show(req, res) {
     try {

@@ -6,8 +6,8 @@ exports.transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
   secure:false,
   auth: {
-        user: 'clon.airbnb@gmail.com',
-        pass: 'uuconqqyzacbwbpb'
+        user: 'airbnb.clon@gmail.com',
+        pass: 'zydsvqqpxmihxzel' 
     },
   tls : { rejectUnauthorized: false}
 });
@@ -26,7 +26,7 @@ exports.recoverypassword = (email, token, name) => {
   };
 
   return {
-    from: `"Airbnb" <clon.airbnb@gmail.com>`,
+    from: `"Airbnb" <airbnb.clon@gmail.com>`,
     to: email,
     subject: "Recuperar contraseña",
     html: `
@@ -56,7 +56,7 @@ exports.resetpassword = (email,name) => {
   };
 
   return {
-    from: `"Airbnb" <clon.airbnb@gmail.com>`,
+    from: `"Airbnb" <airbnb.clon@gmail.com>`,
     to: email,
     subject: "Contraseña reestablecida",
     html: `
@@ -65,7 +65,7 @@ exports.resetpassword = (email,name) => {
     <img style="width:200px; margin-botton:15px" src="https://res.cloudinary.com/dhacdmuvs/image/upload/v1655352296/Airbnb_Logo_B%C3%A9lo.svg_lhryd6.png" alt="logo"/>
     </div>
     <div style="margin-bottom:25px">
-    <h2>Recupera tu contraseña</h2>
+    <h2>Contraseña reestablecida</h2>
     <p>Hola ${name},</p>
     <p>Tu contraseña se ha reestablecido exitosamente</p>
     <p>Atentamente,</p>
