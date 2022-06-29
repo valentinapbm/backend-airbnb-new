@@ -23,14 +23,12 @@ const userSchema = new Schema(
             required: true,
             match: [nameRegex, "name must contain only letters"],
             minlength: [2, "name too short"],
-            maxlength: [10, "name too long"],
         },
         lastname: {
             type: String,
             required: true,
             match: [nameRegex, "lastname must contain only letters"],
             minlength: [2, "lastname too short"],
-            maxlength: [10, "name too long"],
         },
         email: {
             type: String,

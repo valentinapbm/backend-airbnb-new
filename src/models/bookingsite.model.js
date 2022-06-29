@@ -80,10 +80,10 @@ const BookingSiteSchema = new Schema(
     },
     services: {
       type: Array,
-      required: true,
+      required: true, 
     },
     lat: {
-      type: String,
+      type: String, 
       required: true,
     },
     lng: {
