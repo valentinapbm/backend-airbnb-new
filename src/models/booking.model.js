@@ -16,7 +16,6 @@ const bookingSchema = new Schema(
       type: Array,
       required: true,
     },
-
   },
   {
     timestamps: true,

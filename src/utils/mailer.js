@@ -2,9 +2,9 @@ const nodemailer = require("nodemailer");
 require("dotenv").config();
 
 exports.transporter = nodemailer.createTransport({
-  service: 'gmail',
-  host: 'smtp.gmail.com',
-  secure:false,
+  service: process.env.MAIL_SERVICE,
+  host: process.env.MAIL_SERVER,
+  secure: false,
   auth: {
         user: 'airbnb.clon@gmail.com',
         pass: 'zydsvqqpxmihxzel' 
@@ -19,9 +19,9 @@ exports.verify = async (transporter) => {
   }
 };
 
-exports.recoverypassword = (email, token, name) => { 
+exports.recoverypassword = (email, token, name) => {
   const styles = {
-    h1:"color: #FF5A5F",
+    h1: "color: #FF5A5F",
     h2: "color: grey",
   };
 
@@ -49,9 +49,9 @@ exports.recoverypassword = (email, token, name) => {
   };
 };
 
-exports.resetpassword = (email,name) => { 
+exports.resetpassword = (email, name) => {
   const styles = {
-    h1:"color: #FF5A5F",
+    h1: "color: #FF5A5F",
     h2: "color: grey",
   };
 

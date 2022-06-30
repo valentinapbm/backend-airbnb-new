@@ -120,7 +120,7 @@ const BookingSiteSchema = new Schema(
     },
     zipcode: {
       type: String,
-    },
+    }, 
     reviews: {
       type: [{ type: Schema.Types.ObjectId, ref: "Review" }],
       required: false,
