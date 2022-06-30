@@ -65,7 +65,7 @@ exports.resetpassword = (email, name) => {
     <img style="width:200px; margin-botton:15px" src="https://res.cloudinary.com/dhacdmuvs/image/upload/v1655352296/Airbnb_Logo_B%C3%A9lo.svg_lhryd6.png" alt="logo"/>
     </div>
     <div style="margin-bottom:25px">
-    <h2>Contraseña reestablecida </h2>
+    <h2>Contraseña reestablecida</h2>
     <p>Hola ${name},</p>
     <p>Tu contraseña se ha reestablecido exitosamente</p>
     <p>Atentamente,</p>

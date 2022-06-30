@@ -12,8 +12,14 @@ const bookingSchema = new Schema(
       ref: "User",
       required: true,
     },
-    date: {
-      type: Array,
+    date: [
+      {
+        type: String,
+        required: true,
+      },
+    ],
+    customId: {
+      type: String,
       required: true,
     },
   },
