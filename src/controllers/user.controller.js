@@ -25,9 +25,18 @@ module.exports = {
       console.log("este es el id", id);
       const user = await User.findById(id)
         .select("-password")
-        .populate("bookings", "date")
+        .populate({
+          path: "bookings",
+          populate: {
+            path: "userId",
+            select: "name",
+          },
+        })
         .populate("reviews", "title message")
-        .populate("bookingsites");
+        .populate({
+          path: "bookingsites",
+          populate: { path: "bookings", populate: "userId" },
+        });
       res.status(200).json(user);
     } catch (err) {
       res.status(404).json(err);
@@ -120,7 +129,7 @@ module.exports = {
     try {
       const { email, password } = req.body;
 
-      const user = await User.findOne({ email });
+      const user = await User.findOne({ email }).populate("bookings");
 
       if (!user) {
         throw new Error("user or password invalid");
