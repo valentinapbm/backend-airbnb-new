@@ -120,7 +120,7 @@ const BookingSiteSchema = new Schema(
     },
     zipcode: {
       type: String,
-    },
+    }, 
     reviews: {
       type: [{ type: Schema.Types.ObjectId, ref: "Review" }],
       required: false,
@@ -128,20 +128,6 @@ const BookingSiteSchema = new Schema(
     bookings: {
       type: [{ type: Schema.Types.ObjectId, ref: "Booking" }],
       required: false,
-    },
-    /*
-    availability: {
-      type: [String],
-      required: true,
-    },
-    */
-    availabilitybegin: {
-      type: Date,
-      required: true,
-    },
-    availabilityend: {
-      type: Date,
-      required: true,
     },
     userId: { type: Schema.Types.ObjectId, ref: "User", require: true },
   },

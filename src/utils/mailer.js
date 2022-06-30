@@ -9,6 +9,7 @@ exports.transporter = nodemailer.createTransport({
         user: 'airbnb.clon@gmail.com',
         pass: 'zydsvqqpxmihxzel' 
     },
+  tls : { rejectUnauthorized: false}
 });
 
 exports.verify = async (transporter) => {
