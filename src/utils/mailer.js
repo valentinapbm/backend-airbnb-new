@@ -2,14 +2,13 @@ const nodemailer = require("nodemailer");
 require("dotenv").config();
 
 exports.transporter = nodemailer.createTransport({
-  service: 'gmail',
-  host: 'smtp.gmail.com',
-  secure:false,
+  service: process.env.MAIL_SERVICE,
+  host: process.env.MAIL_SERVER,
+  secure: false,
   auth: {
-        user: 'clon.airbnb@gmail.com',
-        pass: 'uuconqqyzacbwbpb'
+        user: 'airbnb.clon@gmail.com',
+        pass: 'zydsvqqpxmihxzel' 
     },
-  tls : { rejectUnauthorized: false}
 });
 
 exports.verify = async (transporter) => {
@@ -19,14 +18,14 @@ exports.verify = async (transporter) => {
   }
 };
 
-exports.recoverypassword = (email, token, name) => { 
+exports.recoverypassword = (email, token, name) => {
   const styles = {
-    h1:"color: #FF5A5F",
+    h1: "color: #FF5A5F",
     h2: "color: grey",
   };
 
   return {
-    from: `"Airbnb" <clon.airbnb@gmail.com>`,
+    from: `"Airbnb" <airbnb.clon@gmail.com>`,
     to: email,
     subject: "Recuperar contraseña",
     html: `
@@ -49,14 +48,14 @@ exports.recoverypassword = (email, token, name) => {
   };
 };
 
-exports.resetpassword = (email,name) => { 
+exports.resetpassword = (email, name) => {
   const styles = {
-    h1:"color: #FF5A5F",
+    h1: "color: #FF5A5F",
     h2: "color: grey",
   };
 
   return {
-    from: `"Airbnb" <clon.airbnb@gmail.com>`,
+    from: `"Airbnb" <airbnb.clon@gmail.com>`,
     to: email,
     subject: "Contraseña reestablecida",
     html: `
@@ -65,7 +64,7 @@ exports.resetpassword = (email,name) => {
     <img style="width:200px; margin-botton:15px" src="https://res.cloudinary.com/dhacdmuvs/image/upload/v1655352296/Airbnb_Logo_B%C3%A9lo.svg_lhryd6.png" alt="logo"/>
     </div>
     <div style="margin-bottom:25px">
-    <h2>Recupera tu contraseña</h2>
+    <h2>Contraseña reestablecida</h2>
     <p>Hola ${name},</p>
     <p>Tu contraseña se ha reestablecido exitosamente</p>
     <p>Atentamente,</p>

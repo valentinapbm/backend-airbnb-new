@@ -80,10 +80,10 @@ const BookingSiteSchema = new Schema(
     },
     services: {
       type: Array,
-      required: true,
+      required: true, 
     },
     lat: {
-      type: String,
+      type: String, 
       required: true,
     },
     lng: {
@@ -128,6 +128,20 @@ const BookingSiteSchema = new Schema(
     bookings: {
       type: [{ type: Schema.Types.ObjectId, ref: "Booking" }],
       required: false,
+    },
+    /*
+    availability: {
+      type: [String],
+      required: true,
+    },
+    */
+    availabilitybegin: {
+      type: Date,
+      required: true,
+    },
+    availabilityend: {
+      type: Date,
+      required: true,
     },
     userId: { type: Schema.Types.ObjectId, ref: "User", require: true },
   },
