@@ -13,7 +13,7 @@ const formData = require("./src/utils/formData");
 const port = process.env.PORT;
 const app = express();
 connect();
-verify(transporter);
+// verify(transporter);
 
 app.use(cors());
 app.use(express.json());

@@ -18,6 +18,10 @@ const bookingSchema = new Schema(
         required: true,
       },
     ],
+    customId: {
+      type: String,
+      required: true,
+    },
   },
   {
     timestamps: true,

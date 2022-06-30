@@ -16,10 +16,9 @@ module.exports = {
   async show(req, res) {
     try {
       const { bookingId } = req.params;
-      const bookingById = await Booking.findById(bookingId).populate({
-        path: "user",
-        select: "name",
-      });
+      const bookingById = await Booking.findById(bookingId)
+        .populate("userId", "name")
+        .populate("bookingSiteId", "title");
       res.status(200).json({ message: "booking found", data: bookingById });
     } catch (err) {
       res.status(404).json(err);
@@ -28,8 +27,20 @@ module.exports = {
   // post
   async create(req, res) {
     try {
-      const { bookingSiteId } = req.body;
+      const { bookingSiteId, date } = req.body;
       const userId = req.user;
+
+      const customId = `${bookingSiteId}${userId}${date[0]}${date[1]}`;
+      //const {customId} = req.body
+
+      console.log("customID", customId);
+
+      const bookingSearch = Booking.find({ customId: customId });
+      console.log("modelo booking", bookingSearch);
+      if (bookingSearch) {
+        console.log("entro al if de bookingg seacrh");
+        throw new Error("Booking already exist");
+      }
 
       const user = await User.findById(userId);
       if (!user) {
@@ -44,6 +55,7 @@ module.exports = {
         ...req.body,
         userId: user._id,
         bookingSiteId: bookingSite,
+        customId: customId,
       });
 
       user.bookings.push(booking);

@@ -42,10 +42,9 @@ module.exports = {
     try {
       const { bookingSiteId } = req.params;
 
-      const bookingSite = await BookingSite.findById(bookingSiteId).populate(
-        "userId",
-        "name lastname image"
-      );
+      const bookingSite = await BookingSite.findById(bookingSiteId)
+        .populate("userId", "name lastname image")
+        .populate("bookings");
       res
         .status(200)
         .json({ message: "Booking Site found", data: bookingSite });
