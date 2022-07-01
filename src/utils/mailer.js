@@ -2,12 +2,12 @@ const nodemailer = require("nodemailer");
 require("dotenv").config();
 
 exports.transporter = nodemailer.createTransport({
-  service: 'gmail',
-  host: 'smtp.gmail.com',
+  service: process.env.MAIL_SERVICE,
+  host: process.env.MAIL_SERVER,
   secure: false,
   auth: {
-        user: 'airbnb.clon@gmail.com',
-        pass: 'zydsvqqpxmihxzel' 
+        user: process.env.MAIL_USER,
+        pass: process.env.MAIL_APPPASS, 
     },
   tls : { rejectUnauthorized: false}
 }); 
