@@ -93,7 +93,6 @@ const BookingSiteSchema = new Schema(
     title: {
       type: String,
       required: true,
-      match: [commentRegex, "title must contain only letters and numbers"],
     },
     description: {
       type: String,

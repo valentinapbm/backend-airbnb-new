@@ -3,9 +3,9 @@ const Busboy = require("busboy");
 const cloudinary = require("cloudinary").v2;
 
 cloudinary.config({
-  cloud_name: "dhacdmuvs",
-  api_key: "663158733127629",
-  api_secret: "hti7fDaOahpRicPJCsirupLIAMk",
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
 // const data = new FormData();
