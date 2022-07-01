@@ -129,26 +129,6 @@ const BookingSiteSchema = new Schema(
       type: [{ type: Schema.Types.ObjectId, ref: "Booking" }],
       required: false,
     },
-<<<<<<< Updated upstream
-=======
-    /*
-    availability: {
-      type: [String],
-      required: true,
-    },
-    */
-    availabilitybegin: {
-      type: Date,
-      required: true,
-    },
-    availabilityend: {
-      type: Date,
-      required: true,
-    },
-    availability: {
-      type: [Date],
-    },
->>>>>>> Stashed changes
     userId: { type: Schema.Types.ObjectId, ref: "User", require: true },
   },
   { timestamps: true }
