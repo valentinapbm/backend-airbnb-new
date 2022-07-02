@@ -230,7 +230,7 @@ module.exports = {
         data: authorization,
       });
     } catch (err) {
-      res.status(500).json({ message: "password was not updated", data: err });
+      res.status(400).json({ message: "password was not updated", data: err });
     }
   },
 };
