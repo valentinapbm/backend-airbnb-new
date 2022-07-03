@@ -35,14 +35,21 @@ module.exports = {
 
       console.log("customID", customId);
 
-      const bookingSearch = Booking.find({ customId: customId });
-      console.log("modelo booking", bookingSearch);
+      const bookingSearch = await Booking.findOne({
+        customId: customId,
+      });
+
+      console.log(
+        "modelo booking ---------------------------------------------------------------------------------------------------",
+        bookingSearch
+      );
       if (bookingSearch) {
         console.log("entro al if de bookingg seacrh");
         throw new Error("Booking already exist");
       }
 
       const user = await User.findById(userId);
+      // console.log("Prueba ", user);
       if (!user) {
         throw new Error("Invalid user");
       }

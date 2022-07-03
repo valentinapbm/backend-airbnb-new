@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 function connect() {
-  mongoose.connect(process.env.MONGO_CONNECTION);
+  mongoose.connect("mongodb://localhost:27017/test");
 
   mongoose.connection.once("open", () => {
     console.log("Connected with mongo");
@@ -13,4 +13,4 @@ function connect() {
 
   return mongoose.connection;
 }
-module.exports = { connect }; 
+module.exports = { connect };
