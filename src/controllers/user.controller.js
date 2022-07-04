@@ -43,17 +43,6 @@ module.exports = {
     }
   },
 
-  //Create -POST
-  // async create(req, res) {
-  //   try {
-  //     const data = req.body;
-  //     const newUser = { ...data };
-  //     const user = await User.create(newUser);
-  //     res.status(201).json({ message: "user created", data: user });
-  //   } catch (err) {
-  //     res.status(400).json({ message: "user could not be created", data: err });
-  //   }
-  // },
   //Update PUT
   async updateImage(req, res) {
     try {
@@ -63,6 +52,26 @@ module.exports = {
       const upImage = await User.findByIdAndUpdate(
         req.user,
         { image: image },
+        {
+          new: true,
+          runValidators: true,
+          context: "query",
+        }
+      );
+
+      res.status(200).json({ message: "User  Image updated", data: upImage });
+    } catch (err) {
+      res.status(400).json({ message: "User could not be updated", data: err });
+    }
+  },
+
+  //delete img
+  async deleteImage(req, res) {
+    try {
+      const id = req.user;
+      const upImage = await User.findByIdAndUpdate(
+        req.user,
+        { image: undefined },
         {
           new: true,
           runValidators: true,
@@ -232,5 +241,5 @@ module.exports = {
     } catch (err) {
       res.status(400).json({ message: "password was not updated", data: err });
     }
-  },
+  }, 
 };
