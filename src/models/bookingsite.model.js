@@ -3,10 +3,6 @@ const Booking = require("./booking.model");
 const Reviews = require("./review.model");
 const User = require("./user.model");
 
-const coordinatesRegex = new RegExp(
-  "[-]?[0-9]*[.][0-9]*[,][-]?[0-9]*[.][0-9]*"
-);
-const commentRegex = new RegExp("[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$");
 const BookingSiteSchema = new Schema(
   {
     home_type: {

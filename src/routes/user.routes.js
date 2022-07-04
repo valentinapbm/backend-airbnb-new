@@ -11,6 +11,7 @@ router.route("/update").put(auth, userController.update);
 router
   .route("/updateImage")
   .put(auth, formData("profile-image"), userController.updateImage);
+router.route("/deleteImage").put(auth, userController.deleteImage);
 router.route("/:userId").delete(userController.destroy);
 router.route("/recoverypassword").post(userController.recoveryPass);
 router.route("/resetpassword").post(auth, userController.resetPass);
