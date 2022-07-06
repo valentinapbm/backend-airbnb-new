@@ -12,7 +12,7 @@ router
   .route("/updateImage")
   .put(auth, formData("profile-image"), userController.updateImage);
 router.route("/deleteImage").put(auth, userController.deleteImage);
-router.route("/:userId").delete(userController.destroy);
+router.route("/deleteUser").delete(auth, userController.destroy);
 router.route("/recoverypassword").post(userController.recoveryPass);
 router.route("/resetpassword").post(auth, userController.resetPass);
 router.route("/changepassword").put(auth, userController.changePass);

@@ -71,7 +71,7 @@ module.exports = {
       const id = req.user;
       const upImage = await User.findByIdAndUpdate(
         req.user,
-        { image: undefined },
+        { image: null },
         {
           new: true,
           runValidators: true,
@@ -105,7 +105,7 @@ module.exports = {
   //Delete
   async destroy(req, res) {
     try {
-      const { userId } = req.params;
+      const  userId = req.user;
       const user = await User.findByIdAndDelete(userId);
       res.status(200).json({ message: "User deleted", data: user });
     } catch (err) {

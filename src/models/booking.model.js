@@ -22,6 +22,24 @@ const bookingSchema = new Schema(
       type: String,
       required: true,
     },
+    invoiceNum:{
+      type:String
+    },
+    description:{
+      type:String
+    },
+    totalNights: {
+      type:Number
+    },
+    amount: {
+      type:Number
+    },
+    currency:{
+      type:String},
+
+  statusBooking:{
+    type:String
+  },
   },
   {
     timestamps: true,
