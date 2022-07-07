@@ -30,7 +30,7 @@ module.exports = {
       const bookingSitesfilter = await BookingSite.find({
         city: { $eq: city },
         total_occupancy: { $gte: total_occupancy },
-      });
+      }).populate("reviews");
 
       console.log(bookingSitesfilter);
       res
