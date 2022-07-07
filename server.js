@@ -12,6 +12,7 @@ const { transporter, verify } = require("./src/utils/mailer");
 const formData = require("./src/utils/formData");
 const port = process.env.PORT;
 const app = express();
+app.use(cors());
 connect();
 verify(transporter);
 
