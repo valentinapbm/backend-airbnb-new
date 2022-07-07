@@ -5,7 +5,14 @@ module.exports = {
   //GET -READ
   async list(req, res) {
     try {
-      const bookingSites = await BookingSite.find();
+      const bookingSites = await BookingSite.find()
+      .populate({
+        path: "reviews",
+        populate: {
+          path: "userId",
+          select: "image name",
+        },
+      });
       res
         .status(200)
         .json({ message: "Booking Sites found", data: bookingSites });
@@ -44,7 +51,15 @@ module.exports = {
 
       const bookingSite = await BookingSite.findById(bookingSiteId)
         .populate("userId", "name lastname image")
-        .populate("bookings");
+        .populate("bookings")
+        .populate({
+          path: "reviews",
+          populate: {
+            path: "userId",
+            select: "image name",
+          },
+        })
+
       res
         .status(200)
         .json({ message: "Booking Site found", data: bookingSite });

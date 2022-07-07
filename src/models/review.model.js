@@ -21,6 +21,10 @@ const reviewSchema = new Schema({
     required: true,
     maxlength: [200, "title too long"],
   },
+  rating: {
+    type: Array,
+    required:true,
+  },
 });
 
 const Review = model("Review", reviewSchema);
