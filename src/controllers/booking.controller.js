@@ -1,7 +1,7 @@
 const BookingSite = require("../models/bookingsite.model");
 const Booking = require("../models/booking.model");
 const User = require("../models/user.model");
-const {transporter, bookingCreatedHost, bookingCreatedGuest,cancelguest} = require("../utils/mailer")
+const {transporter, bookingCreatedHost, bookingCreatedGuest,cancelguest, cancelUser} = require("../utils/mailer")
 module.exports = {
   //get
   async list(req, res) {
@@ -103,6 +103,35 @@ module.exports = {
         .json({ mmessage: "booking not cancelled", data: err });
     }
   },
+
+  //cancel
+  async cancelUser(req, res) {
+    try {
+      const { bookingId } = req.body;
+      console.log(bookingId)
+      const booking =await Booking.findByIdAndUpdate(bookingId, {statusBooking:"cancelled"}, {
+        new: true,
+        runValidators: true,
+        context: "query",
+      });
+      console.log(booking)
+      const guestId = booking.userId
+      const guest = await User.findById(guestId);
+
+      const bookingSiteId=booking.bookingSiteId;
+      const bookingSite = await BookingSite.findById(bookingSiteId)
+      const hostId= bookingSite.userId
+      const host= await User.findById(hostId);
+      bookingSite.bookings.filter(item => item.toString() !== bookingId);
+      bookingSite.save({validateBeforeSave:false});
+      await transporter.sendMail(cancelUser(host.email, guest.name, host.name, bookingSite.title));
+      res.status(200).json({ message: "booking cancelled", data: booking });
+    } catch (err) {
+      res
+        .status(400)
+        .json({ mmessage: "booking not cancelled", data: err });
+    }
+  },
   
   //delete
   async destroy(req, res) {
@@ -114,4 +143,5 @@ module.exports = {
       res.status(400).json({ message: "booking cant be deleted" });
     }
   },
+
 };
