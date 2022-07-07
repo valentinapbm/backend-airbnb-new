@@ -28,8 +28,8 @@ module.exports = {
   //post
   async create(req, res) {
     try {
-      const { userId, bookingSiteId } = req.body;
-
+      const { userId, bookingSiteId,  } = req.body;
+      console.log(req.body)
       const user = await User.findById(userId);
       if (!user) {
         throw new Error("Invalid user");
@@ -41,7 +41,7 @@ module.exports = {
       }
 
       const review = await Review.create({ ...req.body });
-
+      console.log(review)
       user.reviews.push(review);
       bookingSite.reviews.push(review);
 
