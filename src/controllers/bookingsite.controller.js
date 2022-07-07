@@ -1,3 +1,4 @@
+const Booking = require("../models/booking.model");
 const BookingSite = require("../models/bookingsite.model");
 const User = require("../models/user.model");
 
@@ -110,9 +111,11 @@ module.exports = {
       const user = await User.findById(id);
       const { bookingSiteId } = req.params;
       const bookingSite = await BookingSite.findByIdAndDelete(bookingSiteId);
+      const booking = await Booking.deleteMany({bookingSiteId: {$eq:bookingSiteId} })
       await user.bookingsites.filter((item) => {
         item._id.toString() !== bookingSiteId;
       });
+
       res
         .status(200)
         .json({ message: "Booking Site deleted", data: bookingSite });
